@@ -11,7 +11,7 @@ env:
   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   ECS_SERVICE: demo-fotopie                # set this to your Amazon ECS service name
   ECS_CLUSTER: fotoecs               # set this to your Amazon ECS cluster name 1
-  ECS_TASK_DEFINITION: .github/workflows/task-definition.json
+  ECS_TASK_DEFINITION: .github/workflows/task1-definition1.json
 
 jobs:
   deploy:
