@@ -11,7 +11,7 @@ env:
   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   ECS_SERVICE: service-fotopie             # set this to your Amazon ECS service name
   ECS_CLUSTER: fotopie-cluster              # set this to your Amazon ECS cluster name 1
-  ECS_TASK_DEFINITION: .github/workflows/task1-definition.json
+  ECS_TASK_DEFINITION: fotopie-task-definition
 
 jobs:
   deploy:
@@ -90,7 +90,7 @@ jobs:
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
         with:
-          task-definition: ${{ steps.task-def.outputs.task1 }}
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
