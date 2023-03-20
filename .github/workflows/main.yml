@@ -9,9 +9,9 @@ env:
   aws-region: us-east-2
   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  ECS_SERVICE: tmp-service              # set this to your Amazon ECS service name
-  ECS_CLUSTER: fotopie-ecs               # set this to your Amazon ECS cluster name 1
-  ECS_TASK_DEFINITION: .github/workflows/task1-definition1.json
+  ECS_SERVICE: service-fotopie             # set this to your Amazon ECS service name
+  ECS_CLUSTER: fotopie-cluster              # set this to your Amazon ECS cluster name 1
+  ECS_TASK_DEFINITION: .github/workflows/task1-definition.json
 
 jobs:
   deploy:
@@ -44,11 +44,47 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: fotopie
           IMAGE_TAG: ${{ github.sha }}
+          JWT_ACTIVIATE_SECRET_KEY : ${{ secrets.JWT_ACTIVIATE_SECRET_KEY }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+          EMAIL_CONFIRMATION_URL: ${{ secrets.EMAIL_CONFIRMATION_URL }}
+          SALT: ${{ secrets.SALT }}
+          DOMAIN: ${{ secrets.DOMAIN }}
+          MAILGUN_APIKEY: ${{ secrets.MAILGUN_APIKEY }}
+          EXPIRE: ${{ secrets.EXPIRE }}
+          EMAIL_SEND: ${{ secrets.EMAIL_SEND }}
+          ACCESS_TOKEN_SECRET_PRIVATE: ${{ secrets.ACCESS_TOKEN_SECRET_PRIVATE }}
+          ACCESS_TOKEN_SECRET_PUBLIC: ${{ secrets.ACCESS_TOKEN_SECRET_PUBLIC }}
+          REFRESH_TOKEN_SECRET_PRIVATE: ${{ secrets.REFRESH_TOKEN_SECRET_PRIVATE }}
+          REFRESH_TOKEN_SECRET_PUBLIC: ${{ secrets.REFRESH_TOKEN_SECRET_PUBLIC }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_EMAIL_PASSWORD: ${{ secrets.SENDER_EMAIL_PASSWORD }}
+          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+          MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg JWT_ACTIVIATE_SECRET_KEY="5D5B5A527B9D65F70BF5843CCA8D0FD6023E1B2F2A31A244B67D7AACAE11111"
+          docker build \
+          --build-arg JWT_ACTIVIATE_SECRET_KEY="$JWT_ACTIVIATE_SECRET_KEY" \
+          --build-arg MAILGUN_APIKEY="$MAILGUN_APIKEY" \
+          --build-arg SERVER_PORT="$SERVER_PORT" \
+          --build-arg MONGO_URL="$MONGO_URL" \
+          --build-arg EMAIL_CONFIRMATION_URL="$EMAIL_CONFIRMATION_URL" \
+          --build-arg SALT="$SALT" \
+          --build-arg DOMAIN="$DOMAIN" \
+          --build-arg EXPIRE="$EXPIRE" \
+          --build-arg MAILGUN_DOMAIN="$MAILGUN_DOMAIN" \
+          --build-arg MAILGUN_API_KEY="$MAILGUN_API_KEY" \
+          --build-arg SENDER_EMAIL_PASSWORD="$SENDER_EMAIL_PASSWORD" \
+          --build-arg SENDER_EMAIL="$SENDER_EMAIL" \
+          --build-arg JWT_SECRET_KEY="$JWT_SECRET_KEY" \
+          --build-arg REFRESH_TOKEN_SECRET_PUBLIC="$REFRESH_TOKEN_SECRET_PUBLIC" \
+          --build-arg REFRESH_TOKEN_SECRET_PRIVATE="$REFRESH_TOKEN_SECRET_PRIVATE" \
+          --build-arg ACCESS_TOKEN_SECRET_PUBLIC="$ACCESS_TOKEN_SECRET_PUBLIC" \
+          --build-arg ACCESS_TOKEN_SECRET_PRIVATE="$ACCESS_TOKEN_SECRET_PRIVATE" \
+          --build-arg EMAIL_SEND="$EMAIL_SEND" \
+          -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-         # cat $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
+ 
 
 
       - name: Deploy Amazon ECS task definition
