@@ -85,14 +85,13 @@ jobs:
           -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           
-      - name: Update ECS service
-        run: |
-          aws ecs update-service \
-          --cluster $ECS_CLUSTER \
-          --service $ECS_SERVICE \
-          --task-definition task-definition.json \
-          --force-new-deployment
-          
+      - name: Deploy to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          service: service-fotopie
+          cluster: fotopie-cluster 
+          wait-for-service-stability: true
           
           
       - name: Fill in the new image ID in the Amazon ECS task definition
