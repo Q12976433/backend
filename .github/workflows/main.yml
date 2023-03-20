@@ -109,8 +109,8 @@ jobs:
         uses: brunocascio/amazon-ecs-render-task-definition@v1.2.0
         with:
           task-definition: task-definition.json # output file (required)
-          container-name: fotipie # container name (required)
-          image: amazon/latest # image to insert (required)
+          container-name: fotipie 
+          image: amazon/latest
         
 
       - name: Deploy to Amazon ECS service
